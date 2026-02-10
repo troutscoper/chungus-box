@@ -14,6 +14,18 @@ My specs are:
 
 In the future the goal is to have this machine serve as a brain hooked up to a NAS, for now it serves it's purpose.
 
+# App Stack
+
+For the media side of things specifically we use the following apps.
+
+Jellyfin - Viewer
+Jellyseerr - Request/Discovery
+Radarr - Movie Downloads
+Sonarr - TV/Anime Downloads
+Prowlarr - Download Indexer
+RDTClient - Downloader
+Byparr - Cloudflare Bypass
+
 # Operating System
 
 I used Ubuntu Desktop 24.04.3, if I was going to do it again I would probably just run Ubuntu server, but desktop is helpful for first time setup if you aren't comfortable in Linux terminal. After original setup, I've primarily interacted with it via SSH and Web Apps.
@@ -155,12 +167,11 @@ Same with /srv/ but your config files can kind of live wherever you want them to
     └── tv                                                                                                            
 ```
 
-The pipeline can basically be boiled down to this.
+The pipeline can basically be boiled down to this on a file backend.
 
 ```
 Downloaded to /chungus/downloads --> Moved by Radarr/Sonarr to correct /chungus/media/... --> Picked up by Jellyfin
 ```
-
 
 ## Minimum Functionality
 
@@ -168,8 +179,9 @@ These are apps required for the one click download workflow. Simply copy and pas
 
 Pay attention to the volume mapping, I'd recommend reading into it more, but in short the left side is your computer, the right side is what docker sees. It's important to have many of these mapped to similar locations, like radarr and rdt-client.
 
-### Jellyfin (Media Viewing)
+### Jellyfin
 
+Jellyfin is an open-source version of Plex basically. It's a media viewer that isn't bogged down by ads or any sponsored content. You can use Plex if you'd like to, the set-up would be a bit different however, and I wouldn't recommend it with the direction Plex is going.
 
 ```
 version: "3.8"
@@ -189,8 +201,9 @@ services:
 
 ```
 
-### Jellyseerr (Media Request)
+### Jellyseerr
 
+Jellyseerr is a media discovery and requesting tool. It can be used by end-users to easily start a new movie down the download pipeline.
 
 ```
 ---
@@ -216,6 +229,119 @@ services:
     restart: unless-stopped
 ```
 
-### Radarr (Movies)
+### Radarr
 
+Radarr is used to download our movies specifically. It is the tool that will deal with actually picking out the file to be downloaded and moving it post-download.
 
+```
+---
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /srv/radarr/config:/config
+      - /chungus/media/movies:/movies 
+      - /chungus/downloads/rdtclient:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+```
+
+### Sonarr
+
+Same as Radarr, but for TV/Anime.
+
+```
+---
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /srv/sonarr/config:/config
+      - /chungus/media/tv:/tv
+      - /chungus/downloads/rdtclient:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+```
+
+### Prowlarr
+
+This is a torrent indexer and is in charge of actually communicating with torrent sites. It pulls the reports for Radarr and Sonarr to choose from.
+
+```
+---
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /srv/prowlarr/config:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+```
+
+### Byparr
+
+This is crucial for communication with a lot of torrent indexers. I find that Byparr has worked the best for me, but there are other options.
+
+```
+services:
+  byparr:
+    image: ghcr.io/thephaseless/byparr:latest
+    container_name: byparr
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8191:8191"
+```
+
+### RDTClient
+
+This is the Real-Debrid downloader. To use this you need to have an account with a Debrid provider, I use real-debrid, it costs around $11 for 90 days of access. [You can sign-up here.](https://real-debrid.com/)
+
+There is one important note to have about RDTClient. I could not get it to work for the life of me, the documentation is worded weirdly and doesn't exactly show what you want to do. Everything can be set up exactly how you'd expect, expect for the download path and remote path. For me, both of them are linked to /downloads/. The reason for this is the right side of the volume mapping in the below Docker Compose. /downloads/ will also be mapped as the download location within Radarr. Basically, you can set this as whatever as long as it's consistently mapped.
+
+This is the part of the install that I was stuck on for a weekend. It was such an easy fix.
+
+```
+version: "3.8"
+
+services:
+  rdtclient:
+    image: rogerfar/rdtclient:latest
+    container_name: rdtclient
+    restart: unless-stopped
+    ports:
+      - "6500:6500"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      # rdt-client app data
+      - /srv/rdtclient/db:/db
+
+      # downloads (what Sonarr/Radarr will see)
+      - /chungus/downloads/rdtclient:/downloads
+
+      # media root (optional but helpful for testing/moves)
+      - /chungus/media:/media
+```
+
+Those are all of the apps required for minimal functionality. Once you download get all of them set up, the interaction between the apps is as simple as setting API keys in the right places and mapping where you want your downloads to go. Each products installation page will have a much better description of this, but for the most part many of them can be set up by just touching the things that look like they should be touched.
