@@ -88,6 +88,8 @@ None of these are required for ChungusBox to work, but I'd recommend at least Ho
 
 I used Ubuntu Desktop 24.04.3, if I was going to do it again I would probably just run Ubuntu server, but desktop is helpful for first time setup if you aren't comfortable in Linux terminal and want to check your work via GUI. After original setup, I've primarily interacted with it via SSH and the applications it runs.
 
+<img width="564" height="368" alt="image" src="https://github.com/user-attachments/assets/4c93156b-34ae-4d01-8fb2-e9edc0288b95" />
+
 You could theoretically run this on Windows but the entire workflow would be almost certainly different and you'd be on your own.
 
 # Setting up the Essentials
