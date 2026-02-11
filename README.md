@@ -408,7 +408,7 @@ Those are all of the apps required for minimal functionality. Once you download 
 
 # Connecting Outside the House
 
-I use [Tailscale](https://tailscale.com/) to connect outside my house. It's incredibly easy to set up by [following the instructions for Linux here](https://tailscale.com/download/linux). This is useful if you're the one able to set it up, but isn't if you're trying to give access to people who aren't as good with technology. 
+I use [Tailscale](https://tailscale.com/) to connect outside my house. It's incredibly easy to set up by [following the instructions for Linux here](https://tailscale.com/download/linux). This is useful if you're the one able to set it up, but isn't if you're trying to give access to people who aren't as good with technology. It does not require you to open any ports on your network.
 
 I have a seperate dashboard on Homarr with Tailscale IPs to use for connectivity, for the most part I'm just hitting Jellyfin outside the house, and maybe an SSH if I'm feeling fancy.
 
