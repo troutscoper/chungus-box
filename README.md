@@ -8,7 +8,7 @@ ChungusBox is the name for my home Jellyfin server that is automated through the
 
 ChungusBox is running on a refurbished Dell Optiplex 3050 SFF. These can be found for anywhere from $50-$200 dollars, at varying hardware levels.
 
-The main thing is getting a 7th Gen or newer Intel Processor as a requirement for Jellyfin hardware transcoding.
+The main thing is getting a 7th Gen or newer Intel Processor as a requirement for Jellyfin hardware transcoding. Even this isn't a hard requirement for general functionality, but it is recommended!
 
 My specs are:
 
