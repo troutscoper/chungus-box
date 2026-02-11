@@ -21,6 +21,10 @@ In the future the goal is to have this machine serve as a brain hooked up to a N
 
 # App Stack
 
+All of my applications are containerized using [Docker](https://www.docker.com/). My Docker visualization app of choice is [Portainer](https://www.portainer.io/).
+
+As far as home dashboards, there are tons of options depending on the amount of customization you want, and how comfortable you are with config files. Personally, I like GUI editing of the dashboard, so I use [Homarr](https://homarr.dev/). The main disadvantage of Homarr is how memory intensive it is. My dashboard eats up around 700MB of RAM, but the rest of my stack doesn't need a lot of memory to function. Keep that in mind if you plan on running any applications that require more RAM, or if you have a smaller amount available on your system.
+
 For the media side of things specifically I use the following apps.
 
 - [Jellyfin](https://jellyfin.org/) - Final Media Viewer
@@ -75,14 +79,7 @@ Here is a diagram of how all these apps interact with one another during a regul
 [ User ]
 ```
 
-I also run the following apps.
-
-- [Portainer](https://www.portainer.io/) - Docker Visualization
-- [Grocy](https://grocy.info/) - Home ERP Management
-- [Dash](https://getdashdot.com/) - System Information
-- [Homarr](https://homarr.dev/) - Homepage/Dashboard
-
-None of these are required for ChungusBox to work, but I'd recommend at least Homarr or an equivalent. I like Homarr due to its ease of use personally.
+All the Docker Compose files for necessary applications for the Media Stack to work, the only application listed above that doesn't have a corresponding Docker Compose below is Homarr, as dashboards are very much up to personal preferance.
 
 # Operating System
 
