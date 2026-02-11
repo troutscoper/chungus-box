@@ -1,6 +1,6 @@
 # ChungusBox
 
-ChungusBox is the name for my home Jellyfin server that is automated through the *arr stack with downloads handled by RDTClient. I use Homarr as a home page and also run a few other applications to make it look pretty, have more information, and mess around with. This isn't a perfect server by any means, but it fits exactly what I wanted, and works well if you don't intend to hoard media as it has limited drive space.
+ChungusBox is the name for my home Jellyfin server that is automated through the *arr stack with downloads handled by RDTClient. I use Homarr as a home page and also run a few other applications to make it look pretty, have more information, and mess around with. This isn't a perfect server by any means, but it fits exactly what I wanted, and works well if you don't intend to hoard media as it has limited drive space. I set this up over a weekend at the beginning of this year as a fun project, and it also saves money.
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0f319a75-c376-476a-8b8b-60554b05b381" />
 
@@ -88,7 +88,7 @@ None of these are required for ChungusBox to work, but I'd recommend at least Ho
 
 I used Ubuntu Desktop 24.04.3, if I was going to do it again I would probably just run Ubuntu server, but desktop is helpful for first time setup if you aren't comfortable in Linux terminal and want to check your work via GUI. After original setup, I've primarily interacted with it via SSH and the applications it runs.
 
-<img width="564" height="368" alt="image" src="https://github.com/user-attachments/assets/4c93156b-34ae-4d01-8fb2-e9edc0288b95" />
+<img width="705" height="359" alt="image" src="https://github.com/user-attachments/assets/8f4b8dfa-66b4-49aa-8939-55c133d71aae" />
 
 You could theoretically run this on Windows but the entire workflow would be almost certainly different and you'd be on your own.
 
@@ -405,6 +405,13 @@ services:
       # media root (optional but helpful for testing/moves)
       - /chungus/media:/media
 ```
-# Conclusion
+## Final Notes on this Stack
 
-Those are all of the apps required for minimal functionality. Once you download and get all of them set up, the interaction between the apps is as simple as setting API keys in the right places and mapping where you want your downloads to go. Each applications installation page will have a much better description of this, but for the most part many of them can be set up by just inputting the things that look like they should be input. If you want to add anything else to this server, this is a good baseline. Enjoy!
+Those are all of the apps required for minimal functionality. Once you download and get all of them set up, the interaction between the apps is as simple as setting API keys in the right places and mapping where you want your downloads to go. Each applications installation page will have a much better description of this, but for the most part many of them can be set up by just inputting the things that look like they should be input. If you want to add anything else to this server, this is a good baseline.
+
+# Connecting Outside the House
+
+I use [Tailscale](https://tailscale.com/) to connect outside my house. It's incredibly easy to set up by [following the instructions for Linux here](https://tailscale.com/download/linux). This is useful if you're the one able to set it up, but isn't if you're trying to give access to people who aren't as good with technology. 
+
+I have a seperate dashboard on Homarr with Tailscale IPs to use for connectivity, for the most part I'm just hitting Jellyfin outside the house, and maybe an SSH if I'm feeling fancy.
+
