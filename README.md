@@ -410,5 +410,28 @@ Those are all of the apps required for minimal functionality. Once you download 
 
 I use [Tailscale](https://tailscale.com/) to connect outside my house. It's incredibly easy to set up by [following the instructions for Linux here](https://tailscale.com/download/linux). This is useful if you're the one able to set it up, but isn't if you're trying to give access to people who aren't as good with technology. It does not require you to open any ports on your network.
 
-I have a seperate dashboard on Homarr with Tailscale IPs to use for connectivity, for the most part I'm just hitting Jellyfin outside the house, and maybe an SSH if I'm feeling fancy.
+## Subnet Routing
 
+Within Tailscale I have also set up a Subnet router. I do this so that I don't have to set up a secondary dashboard with the 100.x.x.x Tailnet IPs for easy connection. It essentially routes all traffic to where it's supposed to go, whether you're in network or connected via Tailscale. [It's specific documentation can be found here!](https://tailscale.com/docs/features/subnet-routers/how-to/setup) 
+
+Below are the exact bash commands I ran if you are following along exactly, or if you don't know what you're looking at on the linked documentation.
+
+1. Enable IP forwarding on your server
+
+```
+echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
+```
+
+2. Advertise the Route
+
+```
+sudo tailscale up --advertise-routes=192.168.1.0/24
+```
+
+3. On the Tailscale admin dashboard you should now see your server have a blue "Subnet" tag beneath its name
+
+4. Click the three button drop down on the right of your machine and edit route settings to activate the route
+
+Once you're done, you should be able to connect outside of your network using the same IP as you would within network using Tailscale.
